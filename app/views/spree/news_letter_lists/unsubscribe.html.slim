@@ -1,0 +1,15 @@
+- @body_id = 'account-main'
+
+- if @unsubscribe_email_id.present?
+    section.heading
+      h1 We don't want to be clingy, but we'd love it if you stayed. <br>Are you sure you want to unsubscribe?
+    section.edit
+      .edit.full.center
+          a.button.small-button href='#{unsubscribe_action_news_letter_lists_path}?welcome' No
+          a.button.small-button href='#{unsubscribe_action_news_letter_lists_path}?email=#{@unsubscribe_email_id}' Yes
+- else
+    section.heading
+     h1 Oops, Something is wrong
+    section.edit
+      .edit.full.center
+            a.button.small-button href='/t/categories/all' Visit Our Collection

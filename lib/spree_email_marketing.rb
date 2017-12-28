@@ -1,0 +1,5 @@
+require 'spree_core'
+require 'spree_email_marketing/engine'
+require 'spree_email_marketing/version'
+require 'gibbon'
+require 'gibbon/request'

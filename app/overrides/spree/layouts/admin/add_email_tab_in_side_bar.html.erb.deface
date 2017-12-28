@@ -1,0 +1,5 @@
+<!-- insert_bottom "[data-hook='admin_tabs']" -->
+
+<ul class="nav nav-sidebar">
+  <%= main_menu_tree Spree.t(:email), icon: "envelope", sub_menu: "email", url: "#sidebar-email" %>
+</ul>

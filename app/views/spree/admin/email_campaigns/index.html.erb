@@ -1,0 +1,35 @@
+<% content_for :page_title do %>
+  <%= plural_resource_name(Spree::EmailCampaign) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:sync), sync_admin_email_campaigns_path, data: { remote: true, method: :post, type: 'JSON' }, class: 'btn-success campaign_sync', icon: 'refresh' %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:new_email_campaign), new_object_url, { class: "btn-success", icon: 'add', id: 'admin_new_email_list' } %>
+<% end if can? :create, Spree::EmailCampaign %>
+
+<table class="table" id='listing_email_campaigns' data-hook>
+  <thead>
+    <tr data-hook="tax_header">
+      <th><%= Spree.t(:template_name) %></th>
+      <th><%= Spree.t(:list_name) %></th>
+      <th class="actions"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @email_campaigns.each do |email_campaign| %>
+      <tr data-hook="contact_row">
+        <td><%= email_campaign.template_name %></td>
+        <td><%= email_campaign.email_list.name %></td>
+        <td class="actions actions-2 text-right">
+          <%= link_to "Send", send_now_admin_email_campaign_path(id: email_campaign.id), data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= javascript_include_tag 'spree/backend/campaign_sync_flash_handler' %>
+

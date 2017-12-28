@@ -1,0 +1,62 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:email) %>
+<% end %>
+
+<%= form_tag admin_email_configurations_path, method: :patch do %>
+  <div class="panel panel-default" data-hook="boxc_conf">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        <%= Spree.t(:mailchimp_api_key) %>
+      </h1>
+    </div>
+
+    <div class="panel-body">
+      <div class="col-md-6">
+        <div data-hook="name" class="form-group">
+          <%= text_field_tag :mailchimp_api_key, Spree::Config[:mailchimp_api_key], class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        <%= Spree.t(:gmail_unsubscribe_email) %>
+      </h1>
+    </div>
+
+    <div class="panel-body">
+      <div class="col-md-6">
+        <div data-hook="name" class="form-group">
+          <%= text_field_tag :gmail_unsubscribe_email, Spree::Config[:gmail_unsubscribe_email], class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div class="col-md-6">
+        <div data-hook="name" class="form-group">
+          <%= text_field_tag :email_admin_list, Spree::Config[:email_admin_list], class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        <%= Spree.t(:gmail_unsubscribe_password) %>
+      </h1>
+    </div>
+
+    <div class="panel-body">
+      <div class="col-md-6">
+        <div data-hook="name" class="form-group">
+          <%= text_field_tag :gmail_unsubscribe_password, Spree::Config[:gmail_unsubscribe_password], class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-actions" data-hook="buttons">
+    <%= button Spree.t('actions.update'), 'refresh', 'submit', {class: 'btn-success'} %>
+  </div>
+
+<% end %>

@@ -1,0 +1,49 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:contacts), spree.admin_contacts_url %> /
+  <%= @contact.email %>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @contact } %>
+
+<%= form_for [:admin, @contact] do |f| %>
+  <fieldset>
+    <%= render partial: 'form', locals: { f: f } %>
+
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  </fieldset>
+<% end %>
+<br>
+<div data-hook="admin_contact_details" class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">
+      <%= Spree.t(:contact_details) %>
+    </h1>
+  </div>
+
+  <table class="table" data-hook>
+    <tr>
+      <td width="30%"><%= Spree.t(:average_order_value) %>:</td>
+      <td><%= @contact.avg_order_value %></td>
+    </tr>
+    <tr>
+      <td width="30%"><%= Spree.t(:last_placed_order_at) %>:</td>
+      <td><%= @contact.last_placed_order_at.to_s %></td>
+    </tr>
+    <tr>
+      <td width="30%"><%= Spree.t(:optin_date) %>:</td>
+      <td><%= @contact.optin_date.to_s %></td>
+    </tr>
+    <tr>
+      <td width="30%"><%= Spree.t(:optout_date) %>:</td>
+      <td><%= @contact.optout_date.to_s %></td>
+    </tr>
+    <tr>
+      <td width="30%"><%= Spree.t(:location) %>:</td>
+      <td><%= @contact.location %></td>
+    </tr>
+    <tr>
+      <td width="30%"><%= Spree.t(:data_source) %>:</td>
+      <td><%= @contact.data_source %></td>
+    </tr>
+  </table>
+</div>
