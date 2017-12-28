@@ -1,0 +1,34 @@
+<% content_for :page_title do %>
+  <%= plural_resource_name(Spree::EmailList) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%#= button_link_to Spree.t(:new_email_list), new_object_url, { class: "btn-success", icon: 'add', id: 'admin_new_email_list' } %>
+<% end if can? :create, Spree::EmailList %>
+
+<table class="table" id='listing_email_lists' data-hook>
+  <thead>
+    <tr data-hook="tax_header">
+      <th><%= Spree.t(:name) %></th>
+      <th><%= Spree.t(:type) %></th>
+      <th><%= Spree.t(:contacts_count) %></th>
+      <th><%= Spree.t(:subscribed_contacts_count) %></th>
+      <th class="actions"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @email_lists.each do |email_list| %>
+      <tr data-hook="contact_row">
+        <td><%= email_list.name %></td>
+        <td><%= Spree::EmailList::VALID_LIST_TYPES.key(email_list.type).to_s.titlecase %></td>
+        <td><%= email_list.contacts.count %></td>
+        <td><%= email_list.contacts.subscribed.count %></td>
+        <td class="actions actions-2 text-right">
+          <%= link_to 'refresh', refresh_admin_email_list_path(id: email_list), method: :post %>
+          <%= link_to_edit(email_list, no_text: true) if can? :edit, email_list %>
+          <%= link_to_delete(email_list, no_text: true) if can? :delete, email_list %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

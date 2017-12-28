@@ -1,0 +1,10 @@
+- @body_id = 'account-main'
+
+section.heading
+  - if @success
+    h1 Sad to see you go, but you can always come back by signing back up on our website.<br>See you soon!
+  - else
+    h1 Whew! You scared us.
+section.edit
+  .edit.full.center
+      a.button.small-button href='/t/categories/all' Visit Our Collection

@@ -1,0 +1,147 @@
+<% content_for :page_title do %>
+  <%= plural_resource_name(Spree::Contact) %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:import_csv), '', { class: "btn-info btn-sm", icon: 'print', id: 'admin_import_contacts', data: { toggle: 'modal', target: '#import_csv' } } %>
+  <%= button_link_to Spree.t(:export_csv), export_admin_contacts_path(q: params[:q]), { class: "btn-info btn-sm", icon: 'print' } %>
+  <%= button_link_to Spree.t(:new_contact), new_object_url, { class: "btn-success btn-sm", icon: 'add', id: 'admin_new_contact' } %>
+  <%= button_link_to Spree.t(:create_list), admin_email_lists_path(q: params[:q]), { class: "btn-success btn-sm", icon: 'add', id: 'admin_new_contact', method: :post } %>
+<% end if can? :create, Spree::Contact %>
+
+<div class="modal fade" id="import_csv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <%= form_tag import_admin_contacts_path, multipart: true do %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Upload CSV file</h4>
+        </div>
+        <div class="modal-body">
+          <%= file_field_tag :attachment, accept: 'text/csv' %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= submit_tag 'Upload', { class: "btn-info btn" } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :table_filter do %>
+  <div data-hook="admin_products_sidebar">
+
+    <%= search_form_for [:admin, @search] do |f| %>
+      <div data-hook="admin_email_contact_index_search" class="row">
+        <div class="date-range-filter col-md-8">
+          <div class="form-group">
+            <%= label_tag :q_optin_date_gt, Spree.t(:optin_date) %>
+            <div class="row no-padding-bottom">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <%= f.text_field :optin_date_gt, class: 'datepicker datepicker-from form-control', placeholder: Spree.t(:start) %>
+                  <span class="input-group-addon">
+                    <i class="icon icon-calendar"></i>
+                  </span>
+                </div>
+
+              </div>
+              <div class="col-md-6">
+                <div class="input-group">
+                  <%= f.text_field :optin_date_lt, class: 'datepicker datepicker-to form-control', placeholder: Spree.t(:stop) %>
+                  <span class="input-group-addon">
+                    <i class="icon icon-calendar"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="date-range-filter col-md-8">
+          <div class="form-group">
+            <%= label_tag :q_optout_date_gt, Spree.t(:optout_date) %>
+            <div class="row no-padding-bottom">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <%= f.text_field :optout_date_gt, class: 'datepicker datepicker-from form-control', placeholder: Spree.t(:start) %>
+                  <span class="input-group-addon">
+                    <i class="icon icon-calendar"></i>
+                  </span>
+                </div>
+
+              </div>
+              <div class="col-md-6">
+                <div class="input-group">
+                  <%= f.text_field :optout_date_lt, class: 'datepicker datepicker-to form-control', placeholder: Spree.t(:stop) %>
+                  <span class="input-group-addon">
+                    <i class="icon icon-calendar"></i>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= label_tag :q_email_lists_name_eq, Spree.t(:email_lists) %>
+            <%= f.select :email_lists_name_eq, Spree::EmailList.pluck(:name), {include_blank: true}, class: 'select2 js-filterable' %>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <%= label_tag :q_location_eq, Spree.t(:location) %>
+            <%= f.text_field :location_cont, size: 15, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :email_cont, Spree.t(:email) %>
+            <%= f.text_field :email_cont, size: 15, class: "form-control js-quick-search-target" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox">
+        <%= label_tag 'q_subscribed_lists' do %>
+          <%= f.check_box :subscribed_lists_subscribed_eq, {checked: (params[:q].try(:[], :subscribed_lists_subscribed_eq).to_i == 1)}, '1', '' %>
+          <%= Spree.t(:subscribed_lists) %>
+        <% end %>
+      </div>
+
+      <div data-hook="admin_products_index_search_buttons" class="form-actions">
+        <%= button Spree.t(:search), 'search' %>
+      </div>
+    <% end %>
+
+  </div>
+<% end %>
+
+<table class="table" id='listing_contacts' data-hook>
+  <thead>
+    <tr data-hook="tax_header">
+      <th><%= Spree.t(:email) %></th>
+      <th><%= Spree.t(:subscribed) %></th>
+      <th class="actions"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contacts.each do |contact| %>
+      <tr data-hook="contact_row">
+        <td><%= contact.email %></td>
+        <td><%= contact.subscribed? ? 'Yes' : 'No' %></td>
+        <td class="actions actions-2 text-right">
+          <%= link_to_edit(contact, no_text: true) if can? :edit, contact %>
+          <%= link_to_delete(contact, no_text: true) if can? :delete, contact %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render 'spree/admin/shared/index_table_options', collection: @contacts, simple: true %>

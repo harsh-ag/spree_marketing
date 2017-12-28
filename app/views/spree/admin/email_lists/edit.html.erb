@@ -1,0 +1,14 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:email_lists), spree.admin_email_lists_url %> /
+  <%= @email_list.name %>
+<% end %>
+
+<%= render partial: 'spree/admin/shared/error_messages', locals: { target: @email_list } %>
+
+<%= form_for @email_list, as: 'email_list', url: admin_email_list_path(id: @email_list.id) do |f| %>
+  <fieldset>
+    <%= render partial: 'form', locals: { f: f } %>
+
+    <%= render partial: 'spree/admin/shared/edit_resource_links' %>
+  </fieldset>
+<% end %>
